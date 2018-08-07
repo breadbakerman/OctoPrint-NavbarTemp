@@ -1,9 +1,9 @@
 # coding=utf-8
 from __future__ import absolute_import
 
-__author__ = "Jarek Szczepanski <imrahil@imrahil.com>"
+__author__ = "Breadbakerman <breadbaker@gmail.com>"
 __license__ = "GNU Affero General Public License http://www.gnu.org/licenses/agpl.html"
-__copyright__ = "Copyright (C) 2014 Jarek Szczepanski - Released under terms of the AGPLv3 License"
+__copyright__ = "Copyright (C) 2018 Breadbakerman (originally by Jarek Szczepanski) - Released under terms of the AGPLv3 License"
 
 import octoprint.plugin
 from octoprint.util import RepeatedTimer
@@ -114,7 +114,7 @@ class NavBarPlugin(octoprint.plugin.StartupPlugin,
     def get_template_configs(self):
         if self.isRaspi:
             return [
-                dict(type="settings", template="navbartemp_settings_raspi.jinja2")
+                dict(type="settings", template="navbartemp_settings_raspi.jinja2", name="Navbar Temperature")
             ]
         else:
             return []
@@ -131,21 +131,21 @@ class NavBarPlugin(octoprint.plugin.StartupPlugin,
     def get_update_information(self):
         return dict(
             navbartemp=dict(
-                displayName="Navbar Temperature Plugin",
+                displayName="Navbar Temperature",
                 displayVersion=self._plugin_version,
 
                 # version check: github repository
                 type="github_release",
-                user="imrahil",
+                user="breadbakerman",
                 repo="OctoPrint-NavbarTemp",
                 current=self._plugin_version,
 
                 # update method: pip w/ dependency links
-                pip="https://github.com/imrahil/OctoPrint-NavbarTemp/archive/{target_version}.zip"
+                pip="https://github.com/breadbakerman/OctoPrint-NavbarTemp/archive/{target_version}.zip"
             )
         )
 
-__plugin_name__ = "Navbar Temperature Plugin"
+__plugin_name__ = "Navbar Temperature"
 
 def __plugin_load__():
 	global __plugin_implementation__
