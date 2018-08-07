@@ -19,10 +19,14 @@ class NavBarPlugin(octoprint.plugin.StartupPlugin,
         self.isRaspi = False
         self.debugMode = False      # to simulate temp on Win/Mac
         self.displayRaspiTemp = True
+        self.shutdownFan = False
+        self.shutdownTemp = 0
         self._checkTempTimer = None
 
     def on_after_startup(self):
         self.displayRaspiTemp = self._settings.get(["displayRaspiTemp"])
+        self.shutdownFan = self._settings.get(["shutdownFan"])
+        self.shutdownTemp = self._settings.get(["shutdownTemp"])
         self._logger.debug("displayRaspiTemp: %s" % self.displayRaspiTemp)
 
         if sys.platform == "linux2":
@@ -41,8 +45,8 @@ class NavBarPlugin(octoprint.plugin.StartupPlugin,
                 self._logger.debug("Pi 2")
                 self.isRaspi = True
 	    elif match.group(1) == 'BCM2835':
-		self._logger.debug("Pi 3")
-		self.isRaspi = True
+                self._logger.debug("Pi 3")
+                self.isRaspi = True
 
             if self.isRaspi and self.displayRaspiTemp:
                 self._logger.debug("Let's start RepeatedTimer!")
@@ -86,12 +90,14 @@ class NavBarPlugin(octoprint.plugin.StartupPlugin,
 
 	##~~ SettingsPlugin
     def get_settings_defaults(self):
-        return dict(displayRaspiTemp = self.displayRaspiTemp)
+        return dict(displayRaspiTemp = self.displayRaspiTemp, shutdownFan = self.shutdownFan, shutdownTemp = self.shutdownTemp)
 
     def on_settings_save(self, data):
         octoprint.plugin.SettingsPlugin.on_settings_save(self, data)
 
         self.displayRaspiTemp = self._settings.get(["displayRaspiTemp"])
+        self.shutdownFan = self._settings.get(["shutdownFan"])
+        self.shutdownTemp = self._settings.get(["shutdownTemp"])
 
         if self.displayRaspiTemp:
             interval = 5.0 if self.debugMode else 30.0
