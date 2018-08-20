@@ -1,10 +1,20 @@
-# Plugin for OctoPrint - displays temperatures on navbar
+# Navbar Temperature Plugin for OctoPrint
 
-![NavbarTemp](navbar.png?raw=true) 
-
-For Raspberry Pi users it's possible to display internal temperature (configurable via settings dialog):
-![NavbarTempRaspi](navbar_raspi.png?raw=true) 
+Show Raspberry Pi temperature, memory available and printer temperatures/target temperatures in the navbar.
 
 ## Setup
 
-Install the plugin using Plugin Manager from Settings
+Install manually using this URL:
+
+    https://github.com/breadbakerman/OctoPrint-NavbarTemp/archive/master.zip
+
+
+## Requirements
+
+You will need the following bash script in: /home/pi/bin/memavail
+
+```
+#!/bin/bash
+echo $(( $(cat /proc/meminfo | grep MemAvailable | awk '{print$2}') / 1024 ))
+```
+

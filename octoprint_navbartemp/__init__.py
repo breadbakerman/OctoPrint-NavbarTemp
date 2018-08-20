@@ -19,12 +19,14 @@ class NavBarPlugin(octoprint.plugin.StartupPlugin,
         self.isRaspi = False
         self.debugMode = False      # to simulate temp on Win/Mac
         self.displayRaspiTemp = True
+        self.displayRaspiMem = True
         self.shutdownFan = False
         self.shutdownTemp = 0
         self._checkTempTimer = None
 
     def on_after_startup(self):
         self.displayRaspiTemp = self._settings.get(["displayRaspiTemp"])
+        self.displayRaspiMem = self._settings.get(["displayRaspiMem"])
         self.shutdownFan = self._settings.get(["shutdownFan"])
         self.shutdownTemp = self._settings.get(["shutdownTemp"])
         self._logger.debug("displayRaspiTemp: %s" % self.displayRaspiTemp)
@@ -67,9 +69,13 @@ class NavBarPlugin(octoprint.plugin.StartupPlugin,
 
         self._logger.debug("Checking Raspberry Pi internal temperature")
 
+        mem = 0
         if sys.platform == "linux2":
             p = run("/opt/vc/bin/vcgencmd measure_temp", stdout=Capture())
             p = p.stdout.text
+            if self.displayRaspiMem:
+                m = run("/home/pi/bin/memavail", stdout=Capture())
+                mem = int(m.stdout.text)
 
         elif self.debugMode:
             import random
@@ -85,17 +91,18 @@ class NavBarPlugin(octoprint.plugin.StartupPlugin,
         else:
             temp = match.group(1)
             self._logger.debug("match: %s" % temp)
-            self._plugin_manager.send_plugin_message(self._identifier, dict(israspi=self.isRaspi, raspitemp=temp))
+            self._plugin_manager.send_plugin_message(self._identifier, dict(israspi=self.isRaspi, raspitemp=temp, memavail=mem))
 
 
 	##~~ SettingsPlugin
     def get_settings_defaults(self):
-        return dict(displayRaspiTemp = self.displayRaspiTemp, shutdownFan = self.shutdownFan, shutdownTemp = self.shutdownTemp)
+        return dict(displayRaspiTemp = self.displayRaspiTemp, displayRaspiMem = self.displayRaspiMem, shutdownFan = self.shutdownFan, shutdownTemp = self.shutdownTemp)
 
     def on_settings_save(self, data):
         octoprint.plugin.SettingsPlugin.on_settings_save(self, data)
 
         self.displayRaspiTemp = self._settings.get(["displayRaspiTemp"])
+        self.displayRaspiMem = self._settings.get(["displayRaspiMem"])
         self.shutdownFan = self._settings.get(["shutdownFan"])
         self.shutdownTemp = self._settings.get(["shutdownTemp"])
 

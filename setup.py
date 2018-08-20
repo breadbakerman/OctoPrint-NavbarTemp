@@ -6,7 +6,7 @@ import setuptools
 plugin_identifier = "navbartemp"
 plugin_package = "octoprint_%s" % plugin_identifier
 plugin_name = "OctoPrint-NavbarTemp"
-plugin_version = "1.0"
+plugin_version = "1.1"
 plugin_description = "Displays temperatures on navbar"
 plugin_author = "Breadbakerman"
 plugin_author_email = "breadbaker@gmail.com"

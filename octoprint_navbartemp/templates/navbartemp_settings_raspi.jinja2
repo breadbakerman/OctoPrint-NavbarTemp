@@ -1,4 +1,4 @@
-<h3>{{ _('Navbar Temperature') }}</h3>
+<h4>{{ _('Navbar Temperature') }}</h4>
 <div>
     <form class="form-horizontal">
         <div class="control-group">
@@ -8,13 +8,17 @@
                     <input type="checkbox" data-bind="checked: settings.displayRaspiTemp"> {{ _('Show system temperature') }}
                 </label>
                 <label class="checkbox">
+                    <input type="checkbox" data-bind="checked: settings.displayRaspiMem"> {{ _('Show system memory available') }}
+                    <span class="help-block">{{ _('Will only be shown with system temperature.') }}</span>
+                </label>
+                <label class="checkbox">
                     <input type="checkbox" class="check-fan-temp" data-bind="checked: settings.shutdownFan">
                     <span class="label-text">{{ _('Shutdown tool fan below') }} </span>
-                    <div class="input-append">
-                        <input type="number" step="1" min="0" max="70" class="input-mini text-right" data-bind="value: settings.shutdownTemp">
-                        <span class="add-on">°C</span>
-                    </div>
                 </label>
+                <div class="input-append" style="margin-left:18px">
+                    <input type="number" step="1" min="0" max="70" class="input-mini text-right" data-bind="value: settings.shutdownTemp">
+                    <span class="add-on">°C</span>
+                </div>
             </div>
         </div>
     </form>

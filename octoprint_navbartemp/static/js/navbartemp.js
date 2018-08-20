@@ -10,7 +10,10 @@ $(function() {
         self.watchShutdownTemp = false;
         
         self.raspiTemp = ko.observable();
+        self.memAvail = ko.observable();
         self.isRaspi = ko.observable(false);
+        self.showRaspiTemp = ko.observable(false);
+        self.showRaspiMem = ko.observable(false);
 
         self.formatBarTemperature = function(toolName, actual, target) {
             if (toolName === 'Tool' && self.settings.shutdownFan()) {
@@ -52,8 +55,19 @@ $(function() {
         }
         
         self.onBeforeBinding = function () {
-            self.settings = self.global_settings.settings.plugins.navbartemp;
+            //self.settings = self.global_settings.settings.plugins.navbartemp;
+            self.updateSettings();
         };
+
+        self.updateSettings = function () {
+            self.settings = self.global_settings.settings.plugins.navbartemp;
+            self.showRaspiTemp(self.settings.displayRaspiTemp());
+            self.showRaspiMem(self.showRaspiTemp() && self.settings.displayRaspiMem());
+        }
+
+		self.onSettingsHidden = function () {
+			self.updateSettings();
+		}
         
         self.onDataUpdaterPluginMessage = function(plugin, data) {
             if (plugin != 'navbartemp') {
@@ -68,6 +82,7 @@ $(function() {
             }
 
             self.raspiTemp(_.sprintf('RPi: %.1f&deg;C', data.raspitemp));
+            self.memAvail(_.sprintf('RAM: %dM', data.memavail));
         };
     }
 
